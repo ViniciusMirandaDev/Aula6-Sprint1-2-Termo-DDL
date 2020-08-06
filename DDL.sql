@@ -1,0 +1,129 @@
+/* DDL - Data Definition Language */
+--Para Criar o Banco
+CREATE DATABASE Optus;
+GO
+
+--Usar efetivamente o banco
+
+USE Optus;
+--Caso precise apagar, o comando é
+--DROP DATABASE Optus;
+
+/* 
+	Criamos a tabela Album
+	IDENTITY - Gera os ids automaticamente, incrementando-os
+*/
+
+
+
+CREATE TABLE Album(
+	IdAlbum INT PRIMARY KEY IDENTITY NOT NULL,
+	Nome VARCHAR(30) NOT NULL,
+	DataLancamento DATETIME NOT NULL,
+	Localizacao VARCHAR(40) ,
+);
+GO
+
+CREATE TABLE Artista(
+	IdArtista INT PRIMARY KEY IDENTITY NOT NULL,
+	Nome VARCHAR(30) NOT NULL ,
+	IdAlbum INT FOREIGN KEY REFERENCES Album(IdAlbum),
+);
+GO
+
+--Alteramos as tabelas já existentes
+ALTER TABLE Album ADD QtdMinutos Float;
+ALTER TABLE Album ADD Ativo VARCHAR(4);
+ALTER TABLE Album ADD IdArtista INT FOREIGN KEY REFERENCES Artista(IdArtista);
+
+CREATE TABLE Estilo(
+	IdEstilo INT PRIMARY KEY IDENTITY NOT NULL,
+	Nome VARCHAR(30) NOT NULL,
+);
+GO
+
+CREATE TABLE EstiloAlbum(
+	IdEstiloAlbum INT PRIMARY KEY IDENTITY NOT NULL,
+	IdAlbum INT FOREIGN KEY REFERENCES Album(IdAlbum),
+	IdEstilo INT FOREIGN KEY REFERENCES Estilo(IdEstilo),
+);
+GO
+
+CREATE TABLE EstiloArtista(
+	IdEstiloArtista INT PRIMARY KEY IDENTITY NOT NULL,
+	IdArtista INT FOREIGN KEY REFERENCES Artista(IdArtista),
+	IdEstilo INT FOREIGN KEY REFERENCES Estilo(IdEstilo),
+);
+GO
+
+CREATE TABLE Usuario(
+	IdUsuario INT PRIMARY KEY IDENTITY NOT NULL,
+	Nome VARCHAR(30) NOT NULL,
+	Permissao VARCHAR (15) NOT NULL,
+	Email VARCHAR (256) NOT NULL,
+	Senha VARCHAR(51) NOT NULL,
+);
+GO
+
+
+
+
+
+
+CREATE DATABASE ClinicaVet;
+GO
+
+USE ClinicaVet;
+GO
+
+CREATE TABLE Clinica(
+	IdClinica INT PRIMARY KEY IDENTITY NOT NULL,
+	Nome VARCHAR(30) NOT NULL,
+	Endereco VARCHAR(40) NOT NULL ,
+);
+GO
+
+CREATE TABLE Veterinario(
+	IdVeterinario INT PRIMARY KEY IDENTITY NOT NULL,
+	Nome VARCHAR(30) NOT NULL,
+	CRV VARCHAR(30),
+	IdClinica INT FOREIGN KEY REFERENCES Clinica(IdClinica),
+);
+GO
+
+CREATE TABLE Dono(
+	IdDono INT PRIMARY KEY IDENTITY NOT NULL,
+	Nome VARCHAR(70)NOT NULL,
+);
+GO
+
+CREATE TABLE TipoPet(
+	IdTipoPet INT PRIMARY KEY IDENTITY NOT NULL,
+	Descricao VARCHAR(70) NOT NULL,
+);
+GO
+
+CREATE TABLE Raca(
+	IdRaca INT PRIMARY KEY IDENTITY NOT NULL,
+	Descricao VARCHAR(70) NOT NULL,
+	IdTipoPet INT FOREIGN KEY REFERENCES TipoPet(IdTipoPet),
+);
+GO
+
+CREATE TABLE Pet(
+	IdPet INT PRIMARY KEY IDENTITY NOT NULL,
+	Nome VARCHAR(30) NOT NULL,
+	DataNascimento DATETIME,
+	IdRaca INT FOREIGN KEY REFERENCES Raca(IdRaca),
+	IdDono INT FOREIGN KEY REFERENCES Dono(IdDono),
+);
+GO
+
+CREATE TABLE Atendimento(
+	IdAtendimento INT PRIMARY KEY IDENTITY NOT NULL,
+	Descricao VARCHAR(300) NOT NULL,
+	DataAtendimento DATETIME NOT NULL,
+	IdPet INT FOREIGN KEY REFERENCES Pet(IdPet),
+	IdVeterinario INT FOREIGN KEY REFERENCES Veterinario(IdVeterinario),
+);
+GO
